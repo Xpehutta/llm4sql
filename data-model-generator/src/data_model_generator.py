@@ -109,9 +109,9 @@ class DataModelGenerator:
             return f"{col_name} {operator} {value}"
         elif data_type in ['varchar', 'text']:
             if random.random() > 0.5:
-                return f"{col_name} LIKE '%{fake.word()}%'"
+                return f"{col_name} LIKE '%{self.fake.word()}%'"
             else:
-                values = [f"'{fake.word()}'" for _ in range(3)]
+                values = [f"'{self.fake.word()}'" for _ in range(3)]
                 return f"{col_name} IN ({', '.join(values)})"
         elif data_type == 'date':
             start = self.fake.date_between(start_date='-5y', end_date='today')
