@@ -132,7 +132,7 @@ WHERE customers.name LIKE '%smith%'
 - Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
 - Batch-averaged loss:
 
-  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})$
+  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)$
 
 ### Why It Works Well
 - GPU parallelism accelerates batch computations.
@@ -144,7 +144,7 @@ WHERE customers.name LIKE '%smith%'
 ### Mathematical Description
 - Cross-entropy loss for token prediction:
 
-  $\ell(\hat{y}_t, y_t) = $-\log P(y_t \mid \hat{y}_t)$
+  $\ell(\hat{y}_t, y_t) = -\log P(y_t \mid \hat{y}_t)$
   
 - Sequence loss:
 
