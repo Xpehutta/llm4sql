@@ -13,3 +13,60 @@
 
 This data model provides a richer structure for generating synthetic SQL queries, allowing for more complex joins and conditions.
 
+### Required Excel File Structure:
+
+1. **Tables Sheet** (`Tables` worksheet):
+```csv
+table_name   | description
+-------------|-------------
+customers    | Customer information
+orders       | Sales orders
+products     | Product catalog
+```
+
+2. **Columns Sheet** (`Columns` worksheet):
+```csv
+table_name | column_name | data_type | is_primary_key | is_foreign_key
+-----------|-------------|-----------|----------------|---------------
+customers  | customer_id | int       | True           | False
+customers  | name        | varchar   | False          | False
+orders     | order_id    | int       | True           | False
+orders     | customer_id | int       | False          | True
+```
+
+3. **Relationships Sheet** (`Relationships` worksheet):
+```csv
+source_table | source_column | target_table | target_column
+-------------|---------------|--------------|--------------
+orders       | customer_id   | customers    | customer_id
+```
+
+### Example Generated Query:
+```sql
+SELECT customer_id, name
+FROM customers
+INNER JOIN orders ON customers.customer_id = orders.customer_id
+WHERE customers.name LIKE '%smith%' 
+  AND orders.order_date BETWEEN '2021-03-15' AND '2023-08-22';
+```
+
+### Features:
+1. **Realistic Data Generation**:
+   - Numeric ranges based on column types
+   - Realistic date ranges
+   - Context-aware string patterns
+
+2. **Query Complexity Control**:
+   - `num_joins`: Control number of JOIN clauses
+   - `num_conditions`: Control WHERE clause complexity
+
+3. **Data Model Awareness**:
+   - Respects primary/foreign key relationships
+   - Follows table/column data types
+   - Maintains referential integrity
+
+4. **Variety Generation**:
+   - Multiple JOIN types (INNER, LEFT, RIGHT)
+   - Different comparison operators
+   - Various condition patterns (LIKE, IN, BETWEEN)
+
