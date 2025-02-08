@@ -204,7 +204,7 @@ These embeddings are high-dimensional (typically 768 dimensions for BERT-base), 
 Cosine similarity measures the cosine of the angle between two vectors in a multi-dimensional space. It is widely used for comparing text embeddings because:
 
 #### a. **Definition of Cosine Similarity**
-Given two vectors $\mathbf{A} $ and $ \mathbf{B}$ in $n$-dimensional space, cosine similarity is defined as:
+Given two vectors $\mathbf{A}$ and $\mathbf{B}$ in $n$-dimensional space, cosine similarity is defined as:
 
 ![Cosine Similarity](https://latex.codecogs.com/svg.image?\text{cosine_similarity}(\mathbf{A},&space;\mathbf{B})&space;=&space;\frac{\mathbf{A}&space;\cdot&space;\mathbf{B}}{\|\mathbf{A}\|&space;\|\mathbf{B}\|})
 
