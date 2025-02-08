@@ -132,7 +132,8 @@ WHERE customers.name LIKE '%smith%'
 - Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
 - Batch-averaged loss:
 
-  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)$
+  ![Loss Function](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{|\mathcal{B}|}&space;\sum_{(x,&space;y)&space;\in&space;\mathcal{B}}&space;\ell(x,&space;y;&space;\theta))
+
 
 ### Why It Works Well
 - GPU parallelism accelerates batch computations.
