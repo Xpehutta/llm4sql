@@ -206,7 +206,7 @@ Cosine similarity measures the cosine of the angle between two vectors in a mult
 #### a. **Definition of Cosine Similarity**
 Given two vectors $\mathbf{A} $ and $ \mathbf{B}$ in $n$-dimensional space, cosine similarity is defined as:
 
-$\text{cosine\_similarity}(\mathbf{A}, \mathbf{B}) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}$
+![Cosine Similarity](https://latex.codecogs.com/svg.image?\text{cosine_similarity}(\mathbf{A},&space;\mathbf{B})&space;=&space;\frac{\mathbf{A}&space;\cdot&space;\mathbf{B}}{\|\mathbf{A}\|&space;\|\mathbf{B}\|})
 
 Where:
 - $\mathbf{A} \cdot \mathbf{B}$: Dot product of $\mathbf{A}$ and $\mathbf{B}$.
