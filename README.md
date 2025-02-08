@@ -81,17 +81,13 @@ WHERE customers.name LIKE '%smith%'
 - Let $W \in \mathbb{R}^{d \times d}$ be the original weight matrix.
 - Introduce two small matrices $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times d}$ where $r \ll d$.
 - The updated weight matrix becomes:
-  $
-  W_{\text{new}} = W + AB
-  $
+  $W_{\text{new}} = W + AB$
 - During fine-tuning, only $A$ and $B$ are updated, reducing parameters from $d^2$ to $2dr$.
 
 ### Why It Works Well
 - Low-rank updates minimize catastrophic forgetting of pre-trained knowledge.
 - A scaling factor $\alpha$ controls the update impact:
-  $$
-  W_{\text{new}} = W + \frac{\alpha}{r} AB
-  $$
+  $$W_{\text{new}} = W + \frac{\alpha}{r} AB$$
   This balances task-specific adaptation and stability.
 
 ---
