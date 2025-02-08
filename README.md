@@ -232,7 +232,7 @@ Let’s consider two sentences:
 - $S_1 = \text{"I love programming"}$
 - $S_2 = \text{"Programming is fun"}$
 
-BERT generates embeddings $ \mathbf{E}_1 $ and $ \mathbf{E}_2 $ for these sentences. If $S_1$ and $S_2$ are semantically similar, their embeddings will point in similar directions in the embedding space.
+BERT generates embeddings $\mathbf{E}_1$ and $\mathbf{E}_2$ for these sentences. If $S_1$ and $S_2$ are semantically similar, their embeddings will point in similar directions in the embedding space.
 
 #### b. **Cosine Similarity Measures Angular Distance**
 The cosine similarity between $\mathbf{E}_1$ and $\mathbf{E}_2$ is:
