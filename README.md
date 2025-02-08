@@ -258,7 +258,7 @@ Assume $\mathbf{E}_1 = [0.5, 0.8, 0.2]$ and $\mathbf{E}_2 = [0.4, 0.9, 0.1]$:
    
    $\text{cosine\_similarity}(\mathbf{E}_1, \mathbf{E}_2) = \frac{0.94}{0.964 \times 0.990} \approx \frac{0.94}{0.954} \approx 0.985$
 
-This high value indicates strong similarity between $ S_1 $ and $ S_2 $.
+This high value indicates strong similarity between $S_1$ and $S_2$.
 
 ---
 
