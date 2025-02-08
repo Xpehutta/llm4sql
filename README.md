@@ -132,9 +132,7 @@ WHERE customers.name LIKE '%smith%'
 - Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
 - Batch-averaged loss:
 
-   $$
-  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})
-  $$
+   ![Loss Function](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{B&space;\cdot&space;L}&space;\sum_{b=1}^B&space;\sum_{t=1}^L&space;\ell(\hat{y}_{b,t},&space;y_{b,t}))
 
 
 ### Why It Works Well
