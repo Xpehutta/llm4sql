@@ -144,7 +144,7 @@ WHERE customers.name LIKE '%smith%'
 ### Mathematical Description
 - Cross-entropy loss for token prediction:
 
-  $\ell(\hat{y}_t, y_t) = -\log P(y_t \mid \hat{y}_t)$
+  $\ell(\hat{y}_t, y_t) = $-\log P(y_t \mid \hat{y}_t)$
   
 - Sequence loss:
 
