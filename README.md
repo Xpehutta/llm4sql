@@ -204,21 +204,19 @@ These embeddings are high-dimensional (typically 768 dimensions for BERT-base), 
 Cosine similarity measures the cosine of the angle between two vectors in a multi-dimensional space. It is widely used for comparing text embeddings because:
 
 #### a. **Definition of Cosine Similarity**
-Given two vectors $ \mathbf{A} $ and $ \mathbf{B} $ in $ n $-dimensional space, cosine similarity is defined as:
+Given two vectors $\mathbf{A} $ and $ \mathbf{B}$ in $n$-dimensional space, cosine similarity is defined as:
 
-$$
-\text{cosine\_similarity}(\mathbf{A}, \mathbf{B}) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}
-$$
+$\text{cosine\_similarity}(\mathbf{A}, \mathbf{B}) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}$
 
 Where:
-- $ \mathbf{A} \cdot \mathbf{B} $: Dot product of $ \mathbf{A} $ and $ \mathbf{B} $.
-- $ \|\mathbf{A}\| $: Magnitude (or norm) of $ \mathbf{A} $, calculated as $ \sqrt{\sum_{i=1}^n A_i^2} $.
+- $\mathbf{A} \cdot \mathbf{B}$: Dot product of $\mathbf{A}$ and $\mathbf{B}$.
+- $\|\mathbf{A}\|$: Magnitude (or norm) of $\mathbf{A}$, calculated as $\sqrt{\sum_{i=1}^n A_i^2}$.
 
 #### b. **Properties of Cosine Similarity**
 1. **Range**: Cosine similarity values range from -1 to 1:
-   - $ 1 $: Vectors are identical (perfect alignment).
-   - $ 0 $: Vectors are orthogonal (no similarity).
-   - $ -1 $: Vectors are diametrically opposite.
+   - $1$: Vectors are identical (perfect alignment).
+   - $0$: Vectors are orthogonal (no similarity).
+   - $-1$: Vectors are diametrically opposite.
 2. **Invariance to Vector Length**: Cosine similarity is unaffected by the magnitude of the vectors, focusing only on their direction. This makes it ideal for comparing normalized embeddings like those produced by BERT.
 
 #### c. **Why Cosine Similarity Works Well with BERT Embeddings**
@@ -231,19 +229,17 @@ Where:
 
 #### a. **BERT Embeddings Capture Semantic Meaning**
 Let’s consider two sentences:
-- $ S_1 = \text{"I love programming"} $
-- $ S_2 = \text{"Programming is fun"} $
+- $S_1 = \text{"I love programming"}$
+- $S_2 = \text{"Programming is fun"}$
 
-BERT generates embeddings $ \mathbf{E}_1 $ and $ \mathbf{E}_2 $ for these sentences. If $ S_1 $ and $ S_2 $ are semantically similar, their embeddings will point in similar directions in the embedding space.
+BERT generates embeddings $ \mathbf{E}_1 $ and $ \mathbf{E}_2 $ for these sentences. If $S_1$ and $S_2$ are semantically similar, their embeddings will point in similar directions in the embedding space.
 
 #### b. **Cosine Similarity Measures Angular Distance**
-The cosine similarity between $ \mathbf{E}_1 $ and $ \mathbf{E}_2 $ is:
+The cosine similarity between $\mathbf{E}_1$ and $\mathbf{E}_2$ is:
 
-$$
-\text{cosine\_similarity}(\mathbf{E}_1, \mathbf{E}_2) = \frac{\mathbf{E}_1 \cdot \mathbf{E}_2}{\|\mathbf{E}_1\| \|\mathbf{E}_2\|}
-$$
+$\text{cosine\_similarity}(\mathbf{E}_1, \mathbf{E}_2) = \frac{\mathbf{E}_1 \cdot \mathbf{E}_2}{\|\mathbf{E}_1\| \|\mathbf{E}_2\|}$
 
-If $ \mathbf{E}_1 $ and $ \mathbf{E}_2 $ are close in direction (small angle between them), the dot product $ \mathbf{E}_1 \cdot \mathbf{E}_2 $ will be large, resulting in a high cosine similarity value.
+If $\mathbf{E}_1$ and $\mathbf{E}_2$ are close in direction (small angle between them), the dot product $\mathbf{E}_1 \cdot \mathbf{E}_2$ will be large, resulting in a high cosine similarity value.
 
 #### c. **Example Calculation*
 Assume $\mathbf{E}_1 = [0.5, 0.8, 0.2]$ and $\mathbf{E}_2 = [0.4, 0.9, 0.1]$:
