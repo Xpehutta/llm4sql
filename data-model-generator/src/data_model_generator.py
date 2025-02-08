@@ -9,106 +9,97 @@ class DataModelGenerator:
         random.seed(seed)
         self.data_model = None
 
-    def create_sample_data_model(self, output_file="data_model.xlsx"):
-        """Create a sample data model and save it to an Excel file."""
-        # Tables Sheet
-        tables_data = [
-            {"table_name": "customers", "description": "Customer information"},
-            # ... (other table entries as provided in the original code)
-        ]
-        tables_df = pd.DataFrame(tables_data)
-        
-        # Columns Sheet
-        columns_data = [
-            {"table_name": "customers", "column_name": "customer_id", "data_type": "int", "is_primary_key": True, "is_foreign_key": False},
-            # ... (other column entries as provided in the original code)
-        ]
-        columns_df = pd.DataFrame(columns_data)
-        
-        # Relationships Sheet
-        relationships_data = [
-            {"source_table": "orders", "source_column": "customer_id", "target_table": "customers", "target_column": "customer_id"},
-            # ... (other relationship entries as provided in the original code)
-        ]
-        relationships_df = pd.DataFrame(relationships_data)
-        
-        # Create Excel file with multiple sheets
-        with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
-            tables_df.to_excel(writer, sheet_name="Tables", index=False)
-            columns_df.to_excel(writer, sheet_name="Columns", index=False)
-            relationships_df.to_excel(writer, sheet_name="Relationships", index=False)
-        
-        print(f"Data model created successfully: {output_file}")
-
     def load_data_model(self, excel_path="data_model.xlsx"):
-        """Load the data model from an Excel file."""
+        """Load data model from Excel file with expected structure"""
         try:
             data_model = {
                 'tables': pd.read_excel(excel_path, sheet_name='Tables'),
                 'columns': pd.read_excel(excel_path, sheet_name='Columns'),
                 'relationships': pd.read_excel(excel_path, sheet_name='Relationships')
             }
-        except Exception as e:
+        except ValueError as e:
             print(f"Error loading data model: {e}")
-            return False
+            return None
         
-        required_columns = {
-            'tables': ['table_name'],
-            'columns': ['table_name', 'column_name', 'data_type'],
-            'relationships': ['source_table', 'source_column', 'target_table', 'target_column']
-        }
-        for sheet, cols in required_columns.items():
-            if not all(col in data_model[sheet].columns for col in cols):
-                print(f"Missing required columns in {sheet} sheet.")
-                return False
+        # Check if required columns exist in each sheet
+        for sheet_name, df in data_model.items():
+            if sheet_name == 'tables' and 'table_name' not in df.columns:
+                print(f"'table_name' column missing in 'Tables' sheet.")
+                return None
+            elif sheet_name == 'columns' and ('table_name' not in df.columns or 'column_name' not in df.columns or 'data_type' not in df.columns):
+                print(f"Missing required columns in 'Columns' sheet.")
+                return None
+            elif sheet_name == 'relationships' and ('source_table' not in df.columns or 'target_table' not in df.columns or 'source_column' not in df.columns or 'target_column' not in df.columns):
+                print(f"Missing required columns in 'Relationships' sheet.")
+                return None
         
         self.data_model = data_model
         return True
 
     def generate_synthetic_query(self, num_joins=2, num_conditions=2):
-        """Generate a synthetic SQL query based on the loaded data model."""
+        """Generate a synthetic SQL query based on the data model"""
         if self.data_model is None:
             raise ValueError("Data model not loaded. Call load_data_model() first.")
         
-        # Base table selection
+        # Randomly select base table
         base_table = random.choice(self.data_model['tables']['table_name'].tolist())
         
-        # Select related tables for joins
-        relationships = self.data_model['relationships'][self.data_model['relationships']['source_table'] == base_table]
-        selected_joins = relationships.sample(min(num_joins, len(relationships))) if not relationships.empty else pd.DataFrame()
+        # Get related tables
+        relationships = self.data_model['relationships'][
+            self.data_model['relationships']['source_table'] == base_table
+        ]
         
-        # SELECT clause
-        if random.choice([True, False]):
+        # Select joins
+        selected_joins = relationships.sample(min(num_joins, len(relationships)))
+        
+        # Generate SELECT clause
+        use_all_columns = random.choice([True, False])
+        
+        if use_all_columns:
             select_clause = "*"
         else:
-            columns = self.data_model['columns'][self.data_model['columns']['table_name'] == base_table]['column_name'].tolist()
+            columns = self.data_model['columns'][
+                self.data_model['columns']['table_name'] == base_table
+            ]['column_name'].tolist()
             select_clause = ', '.join(columns)
         
-        # JOIN clauses
+        # Generate JOIN clauses
         join_clauses = []
         for _, join in selected_joins.iterrows():
             join_type = random.choice(['INNER', 'LEFT', 'RIGHT'])
-            join_clause = (f"{join_type} JOIN {join['target_table']} ON {base_table}.{join['source_column']} = "
-                           f"{join['target_table']}.{join['target_column']}")
+            join_clause = (
+                f"{join_type} JOIN {join['target_table']} "
+                f"ON {base_table}.{join['source_column']} = "
+                f"{join['target_table']}.{join['target_column']}"
+            )
             join_clauses.append(join_clause)
         
-        # WHERE conditions
+        # Generate WHERE conditions
         involved_tables = [base_table] + selected_joins['target_table'].tolist()
-        all_columns = self.data_model['columns'][self.data_model['columns']['table_name'].isin(involved_tables)]
-        where_conditions = [self._generate_column_condition(col) for _, col in all_columns.sample(min(num_conditions, len(all_columns))).iterrows()]
+        all_columns = self.data_model['columns'][
+            self.data_model['columns']['table_name'].isin(involved_tables)
+        ]
+        
+        where_conditions = []
+        for _ in range(num_conditions):
+            col = all_columns.sample(1).iloc[0]
+            condition = self._generate_column_condition(col)
+            where_conditions.append(condition)
         
         # Assemble query
-        query = f"SELECT {select_clause}\nFROM {base_table}"
+        query = f"SELECT {select_clause}\n"
+        query += f"FROM {base_table}\n"
         if join_clauses:
-            query += "\n" + "\n".join(join_clauses)
+            query += '\n'.join(join_clauses) + '\n'
         if where_conditions:
-            query += f"\nWHERE {' AND '.join(where_conditions)};"
+            query += f"WHERE {' AND '.join(where_conditions)};"
         else:
             query += ";"
+        
         return query
 
     def _generate_column_condition(self, col):
-        """Generate a realistic condition for a column (private helper method)."""
+        """Generate realistic condition based on column type"""
         col_name = f"{col['table_name']}.{col['column_name']}"
         data_type = col['data_type'].lower()
         
@@ -118,9 +109,9 @@ class DataModelGenerator:
             return f"{col_name} {operator} {value}"
         elif data_type in ['varchar', 'text']:
             if random.random() > 0.5:
-                return f"{col_name} LIKE '%{self.fake.word()}%'"
+                return f"{col_name} LIKE '%{fake.word()}%'"
             else:
-                values = [f"'{self.fake.word()}'" for _ in range(3)]
+                values = [f"'{fake.word()}'" for _ in range(3)]
                 return f"{col_name} IN ({', '.join(values)})"
         elif data_type == 'date':
             start = self.fake.date_between(start_date='-5y', end_date='today')
@@ -150,7 +141,5 @@ class DataModelGenerator:
 
 # Example usage:
 # generator = DataModelGenerator()
-# generator.create_sample_data_model()
 # generator.load_data_model()
 # dataset, queries = generator.generate_dataset(num_queries=5000)
-# print(dataset.head())
