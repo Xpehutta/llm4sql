@@ -112,12 +112,12 @@ WHERE customers.name LIKE '%smith%'
 
 ## 3. **Training Loop**
 #### Mathematical Description:
-- The training loop minimizes the loss function $\mathcal{L}(\theta) $, where $\theta $ represents the trainable parameters (i.e., $A $ and $B $ in LoRA).
+- The training loop minimizes the loss function $\mathcal{L}(\theta) $, where $\theta $ represents the trainable parameters (i.e., $A$ and $B$ in LoRA).
 - For each batch $\mathcal{B} $, the loss is computed as:
 
  ![Equation](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{|\mathcal{B}|}&space;\sum_{(x,&space;y)&space;\in&space;\mathcal{B}}&space;\ell(x,&space;y;&space;\theta))
   
-  where $\ell(x, y; \theta) $ is the per-sample loss (e.g., cross-entropy loss for language modeling).
+  where $\ell(x, y; \theta)$ is the per-sample loss (e.g., cross-entropy loss for language modeling).
 - Gradients are computed using backpropagation:
 
   $\nabla_\theta \mathcal{L}_{\mathcal{B}}(\theta)$
@@ -126,7 +126,7 @@ WHERE customers.name LIKE '%smith%'
 
   $\theta \leftarrow \theta - \eta \cdot \nabla_\theta \mathcal{L}_{\mathcal{B}}(\theta)$
   
-  where $\eta $ is the learning rate.
+  where $\eta$ is the learning rate.
 
 ### Why It Works Well
 - AdamW combines adaptive learning rates and weight decay.
