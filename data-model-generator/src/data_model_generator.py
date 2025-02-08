@@ -142,12 +142,15 @@ class DataModelGenerator:
             output_part = ' '.join(parts[r:])
             input_lst.append(input_part)
             output_lst.append(output_part)
+
+        queries = pd.DataFrame({"queries": queries})
+        dataset = pd.DataFrame({"input": input_lst, "output": output_lst})
         
-        return pd.DataFrame({"input": input_lst, "output": output_lst})
+        return dataset, queries
 
 # Example usage:
 # generator = DataModelGenerator()
 # generator.create_sample_data_model()
 # generator.load_data_model()
-# dataset = generator.generate_dataset(num_queries=100)
+# dataset, queries = generator.generate_dataset(num_queries=5000)
 # print(dataset.head())
