@@ -115,7 +115,7 @@ WHERE customers.name LIKE '%smith%'
 - Minimize loss $\mathcal{L}(\theta)$ for LoRA parameters $\theta = \{A, B\}$.
 - Batch loss:
 
-  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)$
+   ![Loss Function](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{|\mathcal{B}|}&space;\sum_{(x,&space;y)&space;\in&space;\mathcal{B}}&space;\ell(x,&space;y;&space;\theta))
   
 - AdamW update:
 
@@ -132,7 +132,9 @@ WHERE customers.name LIKE '%smith%'
 - Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
 - Batch-averaged loss:
 
-  ![Loss Function](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{|\mathcal{B}|}&space;\sum_{(x,&space;y)&space;\in&space;\mathcal{B}}&space;\ell(x,&space;y;&space;\theta))
+   $$
+  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})
+  $$
 
 
 ### Why It Works Well
