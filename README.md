@@ -81,9 +81,9 @@ WHERE customers.name LIKE '%smith%'
 - Let $W \in \mathbb{R}^{d \times d}$ be the original weight matrix.
 - Introduce two small matrices $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times d}$ where $r \ll d$.
 - The updated weight matrix becomes:
-  $$
+  $
   W_{\text{new}} = W + AB
-  $$
+  $
 - During fine-tuning, only $A$ and $B$ are updated, reducing parameters from $d^2$ to $2dr$.
 
 ### Why It Works Well
