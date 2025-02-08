@@ -89,7 +89,9 @@ WHERE customers.name LIKE '%smith%'
 ### Why It Works Well
 - Low-rank updates minimize catastrophic forgetting of pre-trained knowledge.
 - A scaling factor $\alpha$ controls the update impact:
-  $$W_{\text{new}} = W + \frac{\alpha}{r} AB$$
+
+  $W_{\text{new}} = W + \frac{\alpha}{r} AB$
+  
   This balances task-specific adaptation and stability.
 
 ---
@@ -99,9 +101,8 @@ WHERE customers.name LIKE '%smith%'
 - Input-output pairs $(x, y)$ are tokenized into sequences.
 - Construct full text as $z = x \to y$ (separator token $\to$).
 - Tokenization and padding:
-  $$
-  z_{\text{tokens}} = \text{Tokenizer}(z), \quad z_{\text{padded}} = \text{PadOrTruncate}(z_{\text{tokens}}, L)
-  $$
+
+  $z_{\text{tokens}} = \text{Tokenizer}(z), \quad z_{\text{padded}} = \text{PadOrTruncate}(z_{\text{tokens}}, L)$
 
 ### Why It Works Well
 - Fixed sequence length $L$ simplifies batch processing.
@@ -113,13 +114,12 @@ WHERE customers.name LIKE '%smith%'
 ### Mathematical Description
 - Minimize loss $\mathcal{L}(\theta)$ for LoRA parameters $\theta = \{A, B\}$.
 - Batch loss:
-  $$
-  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)
-  $$
+
+  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)$
+  
 - AdamW update:
-  $$
-  \theta \leftarrow \theta - \eta \cdot \nabla_\theta \mathcal{L}_{\mathcal{B}}(\theta)
-  $$
+
+  $\theta \leftarrow \theta - \eta \cdot \nabla_\theta \mathcal{L}_{\mathcal{B}}(\theta)$
 
 ### Why It Works Well
 - AdamW combines adaptive learning rates and weight decay.
@@ -131,9 +131,8 @@ WHERE customers.name LIKE '%smith%'
 ### Mathematical Description
 - Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
 - Batch-averaged loss:
-  $$
-  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})
-  $$
+
+  $\mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})$
 
 ### Why It Works Well
 - GPU parallelism accelerates batch computations.
@@ -144,13 +143,12 @@ WHERE customers.name LIKE '%smith%'
 ## 5. **Loss Function**
 ### Mathematical Description
 - Cross-entropy loss for token prediction:
-  $$
-  \ell(\hat{y}_t, y_t) = -\log P(y_t \mid \hat{y}_t)
-  $$
+
+  $\ell(\hat{y}_t, y_t) = -\log P(y_t \mid \hat{y}_t)$
+  
 - Sequence loss:
-  $$
-  \mathcal{L}(\theta) = \frac{1}{L} \sum_{t=1}^L \ell(\hat{y}_t, y_t)
-  $$
+
+  $\mathcal{L}(\theta) = \frac{1}{L} \sum_{t=1}^L \ell(\hat{y}_t, y_t)$
 
 ### Why It Works Well
 - Directly optimizes token prediction accuracy.
@@ -161,9 +159,8 @@ WHERE customers.name LIKE '%smith%'
 ## 6. **Device Management**
 ### Mathematical Description
 - GPU computation time dominates:
-  $$
-  T_{\text{GPU}} \ll T_{\text{CPU}}
-  $$
+
+  $T_{\text{GPU}} \ll T_{\text{CPU}}$
 
 ### Why It Works Well
 - GPUs excel at parallel matrix operations critical for neural networks.
