@@ -69,4 +69,105 @@ WHERE customers.name LIKE '%smith%'
    - Multiple JOIN types (INNER, LEFT, RIGHT)
    - Different comparison operators
    - Various condition patterns (LIKE, IN, BETWEEN)
+  
+
+
+
+# Technical Overview
+
+## 1. **LoRA (Low-Rank Adaptation)**
+### Mathematical Description
+- LoRA reduces trainable parameters by adding low-rank matrices to the original weights.
+- Let $W \in \mathbb{R}^{d \times d}$ be the original weight matrix.
+- Introduce two small matrices $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times d}$ where $r \ll d$.
+- The updated weight matrix becomes:
+  $$
+  W_{\text{new}} = W + AB
+  $$
+- During fine-tuning, only $A$ and $B$ are updated, reducing parameters from $d^2$ to $2dr$.
+
+### Why It Works Well
+- Low-rank updates minimize catastrophic forgetting of pre-trained knowledge.
+- A scaling factor $\alpha$ controls the update impact:
+  $$
+  W_{\text{new}} = W + \frac{\alpha}{r} AB
+  $$
+  This balances task-specific adaptation and stability.
+
+---
+
+## 2. **Dataset and Tokenization**
+### Mathematical Description
+- Input-output pairs $(x, y)$ are tokenized into sequences.
+- Construct full text as $z = x \to y$ (separator token $\to$).
+- Tokenization and padding:
+  $$
+  z_{\text{tokens}} = \text{Tokenizer}(z), \quad z_{\text{padded}} = \text{PadOrTruncate}(z_{\text{tokens}}, L)
+  $$
+
+### Why It Works Well
+- Fixed sequence length $L$ simplifies batch processing.
+- The separator token clarifies input-output boundaries for the model.
+
+---
+
+## 3. **Training Loop**
+### Mathematical Description
+- Minimize loss $\mathcal{L}(\theta)$ for LoRA parameters $\theta = \{A, B\}$.
+- Batch loss:
+  $$
+  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{|\mathcal{B}|} \sum_{(x, y) \in \mathcal{B}} \ell(x, y; \theta)
+  $$
+- AdamW update:
+  $$
+  \theta \leftarrow \theta - \eta \cdot \nabla_\theta \mathcal{L}_{\mathcal{B}}(\theta)
+  $$
+
+### Why It Works Well
+- AdamW combines adaptive learning rates and weight decay.
+- Fine-tuning only LoRA parameters reduces memory and speeds training.
+
+---
+
+## 4. **Batch Processing**
+### Mathematical Description
+- Input tensor shape: $[B, L]$ for batch size $B$ and sequence length $L$.
+- Batch-averaged loss:
+  $$
+  \mathcal{L}_{\mathcal{B}}(\theta) = \frac{1}{B \cdot L} \sum_{b=1}^B \sum_{t=1}^L \ell(\hat{y}_{b,t}, y_{b,t})
+  $$
+
+### Why It Works Well
+- GPU parallelism accelerates batch computations.
+- Larger batches stabilize gradient estimates.
+
+---
+
+## 5. **Loss Function**
+### Mathematical Description
+- Cross-entropy loss for token prediction:
+  $$
+  \ell(\hat{y}_t, y_t) = -\log P(y_t \mid \hat{y}_t)
+  $$
+- Sequence loss:
+  $$
+  \mathcal{L}(\theta) = \frac{1}{L} \sum_{t=1}^L \ell(\hat{y}_t, y_t)
+  $$
+
+### Why It Works Well
+- Directly optimizes token prediction accuracy.
+- Suitable for autoregressive language modeling.
+
+---
+
+## 6. **Device Management**
+### Mathematical Description
+- GPU computation time dominates:
+  $$
+  T_{\text{GPU}} \ll T_{\text{CPU}}
+  $$
+
+### Why It Works Well
+- GPUs excel at parallel matrix operations critical for neural networks.
+- Efficient hardware utilization speeds up training.
 
