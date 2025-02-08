@@ -115,7 +115,7 @@ WHERE customers.name LIKE '%smith%'
 - The training loop minimizes the loss function $\mathcal{L}(\theta)$, where $\theta$ represents the trainable parameters (i.e., $A$ and $B$ in LoRA).
 - For each batch $\mathcal{B} $, the loss is computed as:
 
-$\text{cosine\_similarity}(\mathbf{A}, \mathbf{B}) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}$
+ ![Equation](https://latex.codecogs.com/svg.image?\mathcal{L}_{\mathcal{B}}(\theta)&space;=&space;\frac{1}{|\mathcal{B}|}&space;\sum_{(x,&space;y)&space;\in&space;\mathcal{B}}&space;\ell(x,&space;y;&space;\theta))
   
   where $\ell(x, y; \theta)$ is the per-sample loss (e.g., cross-entropy loss for language modeling).
 - Gradients are computed using backpropagation:
