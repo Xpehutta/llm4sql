@@ -2,7 +2,7 @@
 
 #### Mathematical Description:
 - LoRA reduces the number of trainable parameters by adding low-rank matrices to the original weight matrices of the model.
-- Let $W \in \mathbb{R}^{d \times d} $ be the original weight matrix of a layer in the pre-trained model.
+- Let \( W \in \mathbb{R}^{d \times d} \) be the original weight matrix of a layer in the pre-trained model.
 - LoRA introduces two small matrices $A \in \mathbb{R}^{d \times r} $ and $B \in \mathbb{R}^{r \times d} $, where $r \ll d $ is the rank of the decomposition.
 - The updated weight matrix becomes:
   $$
