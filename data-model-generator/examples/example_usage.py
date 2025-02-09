@@ -1,5 +1,5 @@
 from src.data_model_generator import DataModelGenerator
-from model.data_model_generator import create_data_model_excel
+from model.create_data_model_excel import create_data_model_excel
 
 if __name__ == "__main__":
     create_data_model_excel()
