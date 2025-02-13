@@ -66,7 +66,7 @@ class DataModelGenerator:
         # Generate JOIN clauses
         join_clauses = []
         for _, join in selected_joins.iterrows():
-            join_type = random.choice(['INNER', 'LEFT', 'RIGHT'])
+            join_type = random.choice(['', 'LEFT'])
             join_clause = (
                 f"{join_type} JOIN {join['target_table']} "
                 f"ON {base_table}.{join['source_column']} = "
@@ -126,6 +126,7 @@ class DataModelGenerator:
         
         input_lst = []
         output_lst = []
+        r_list = []
         for q in queries:
             r = random.choice([1, 2])
             parts = q.split("\n")
@@ -133,9 +134,10 @@ class DataModelGenerator:
             output_part = ' '.join(parts[r:])
             input_lst.append(input_part)
             output_lst.append(output_part)
+            r_list.append(r)
 
         queries = pd.DataFrame({"queries": queries})
-        dataset = pd.DataFrame({"input": input_lst, "output": output_lst})
+        dataset = pd.DataFrame({"input": input_lst, "output": output_lst, "group":r_list})
         
         return dataset, queries
 
