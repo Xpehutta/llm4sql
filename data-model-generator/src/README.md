@@ -69,6 +69,70 @@ WHERE customers.name LIKE '%smith%'
 3. **Main Method**:
    - `rouge_l_sql`: Takes two SQL queries (generated and reference), tokenizes them, computes the LCS length, and calculates precision, recall, and F1 score to return the ROUGE-L-SQL metrics.
 
+The provided code implements a custom ROUGE-L metric tailored for SQL queries, combining methodological adaptations for SQL syntax and mathematical foundations of sequence alignment. Below is a breakdown of its methodological and mathematical rationale:
+
+
+### **Methodological Insights**
+1. **SQL-Specific Tokenization**:
+   - **Normalization**: Converts queries to lowercase and collapses whitespace to handle stylistic variations (e.g., `SELECT` vs `select`).
+   - **Pattern-Based Splitting**: Uses regex to tokenize SQL into:
+     - **Keywords** (e.g., `SELECT`, `FROM`),
+     - **Identifiers** (e.g., table/column names like `customer_id`),
+     - **Operators** (e.g., `=`, `>`),
+     - **Punctuation** (e.g., commas, parentheses).
+   - This ensures structural elements (e.g., clauses) are preserved, while ignoring irrelevant formatting differences.
+
+2. **Longest Common Subsequence (LCS)**:
+   - **Order-Aware Comparison**: LCS identifies the longest sequence of tokens that appear in the same order (not necessarily contiguously) in both the generated and reference queries.
+   - **Robust to Partial Matches**: Handles variations like reordered conditions in `WHERE` clauses (e.g., `WHERE a=1 AND b=2` vs `WHERE b=2 AND a=1` will partially match).
+
+3. **ROUGE-L Adaptation**:
+   - **Precision/Recall/F1**: Computes:
+     - **Precision**: `LCS Length / Generated Query Length` (avoids over-cluttering),
+     - **Recall**: `LCS Length / Reference Query Length` (ensures coverage),
+     - **F1 Score**: Balances the two.
+   - These metrics align with the goals of SQL generation: producing concise, accurate queries (precision) that include all necessary components (recall).
+
+
+### **Mathematical Insights**
+1. **Dynamic Programming for LCS**:
+   - The LCS algorithm uses a 2D matrix `dp` where `dp[i][j]` represents the LCS length of the first `i` tokens of the generated query and first `j` tokens of the reference query.
+   - Recurrence Relation:
+     ```
+     dp[i][j] = dp[i-1][j-1] + 1              if tokens match
+                max(dp[i-1][j], dp[i][j-1])   otherwise
+     ```
+   - Time Complexity: \(O(mn)\), where \(m\) and \(n\) are token counts of the two queries.
+
+2. **F1 Score Calculation**:
+   - Harmonic mean of precision (\(P\)) and recall (\(R\)):
+     \[
+     F1 = \frac{2PR}{P + R}
+     \]
+   - Penalizes extreme imbalances (e.g., high recall but low precision).
+
+
+### **Why It Works Well for SQL**
+1. **Structure Preservation**:
+   - Tokenization captures SQL’s hierarchical structure (e.g., `SELECT` followed by column names, `FROM` followed by tables).
+   - LCS rewards correct ordering of clauses (e.g., `SELECT` before `FROM`).
+
+2. **Invariance to Irrelevant Variations**:
+   - Case insensitivity and whitespace normalization ignore stylistic differences.
+   - Operators/punctuation are treated as distinct tokens, ensuring comparisons are syntax-aware.
+
+3. **Balanced Evaluation**:
+   - F1 score discourages overly verbose or incomplete queries.
+
+
+### **Limitations and Considerations**
+- **Semantic Equivalence**: LCS does not account for semantically equivalent but syntactically different queries (e.g., `WHERE a=1 AND b=2` vs `WHERE b=2 AND a=1`).
+- **Complex SQL Constructs**: The tokenizer may miss advanced features (e.g., `WITH` clauses, window functions), depending on the regex patterns.
+- **Token Granularity**: Identifier names are tokenized as single units, so typos (e.g., `custmer_id` vs `customer_id`) are penalized harshly.
+
+
+### **Conclusion**
+This approach is suitable for tasks where **structural similarity** (clauses, keywords, identifiers) is more critical than semantic equivalence. It provides a robust, interpretable metric for evaluating SQL generation systems, aligning with the syntactic rigor required for valid SQL. For deeper semantic validation, additional checks (e.g., query execution equivalence) would be needed.
 
 ---
 ## SQLSimilarity Class
