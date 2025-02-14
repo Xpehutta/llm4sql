@@ -1,5 +1,37 @@
+
+### Example Generated Query:
+```sql
+SELECT customer_id, name
+FROM customers
+INNER JOIN orders ON customers.customer_id = orders.customer_id
+WHERE customers.name LIKE '%smith%' 
+  AND orders.order_date BETWEEN '2021-03-15' AND '2023-08-22';
+```
+
+### Features:
+1. **Realistic Data Generation**:
+   - Numeric ranges based on column types
+   - Realistic date ranges
+   - Context-aware string patterns
+
+2. **Query Complexity Control**:
+   - `num_joins`: Control number of JOIN clauses
+   - `num_conditions`: Control WHERE clause complexity
+
+3. **Data Model Awareness**:
+   - Respects primary/foreign key relationships
+   - Follows table/column data types
+   - Maintains referential integrity
+
+4. **Variety Generation**:
+   - Multiple JOIN types (INNER, LEFT, RIGHT)
+   - Different comparison operators
+   - Various condition patterns (LIKE, IN, BETWEEN)
+
+
+
 ---
-# DataModelGenerator
+## DataModelGenerator Class
 ---
 
 ### Approach
@@ -19,7 +51,7 @@
 
 
 ---
-# SQLRougeL
+## SQLRougeL Class
 ---
 
 ### Approach
