@@ -1,5 +1,5 @@
 ---
-# Data Model:
+# Data Modeling
 ---
 
 1. **Tables**:
@@ -195,7 +195,6 @@ SELECT c.name FROM customers AS c WHERE c.id = 123;
 SELECT name FROM customers WHERE id = ?;
 ```
 
----
 
 ### **2. AST Similarity**  
 **Goal:** Compare the structural similarity of queries using their ASTs.  
@@ -208,7 +207,6 @@ SELECT name FROM customers WHERE id = ?;
 - Ignores aliases/literals (due to normalization).  
 - Captures structural patterns (e.g., joins, filters, groupings).  
 
----
 
 ### **3. Component Similarity**  
 **Goal:** Compare shared components (tables, columns, conditions) using **Jaccard similarity**.  
@@ -226,7 +224,6 @@ SELECT name FROM customers WHERE id = ?;
 - Identifies overlaps in critical elements (e.g., shared tables/columns).  
 - Useful for detecting partial similarities (e.g., same tables but different filters).  
 
----
 
 ### **4. Combined Score**  
 A weighted average of:  
@@ -237,7 +234,6 @@ A weighted average of:
 
 This allows customizable prioritization of structural vs. component similarities.
 
----
 
 ### **Key Insights**  
 1. **Robust to Formatting:** Normalization removes formatting noise (aliases, spacing, capitalization).  
@@ -247,7 +243,6 @@ This allows customizable prioritization of structural vs. component similarities
    - **AST similarity** is strict but may miss semantic equivalences (e.g., `WHERE a = b` vs `WHERE b = a`).  
    - **Component similarity** is lenient but may over-simplify complex logic.  
 
----
 
 ### **Example Output**  
 For the provided `query1` and `query2`:  
@@ -258,7 +253,6 @@ For the provided `query1` and `query2`:
   - Columns: 1.0 (`name`, `total`).  
   - Conditions: Lower due to different dates (`?` vs `?` after normalization).  
 
----
 
 ### **Use Cases**  
 - Plagiarism detection in SQL queries.  
