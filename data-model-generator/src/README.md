@@ -109,6 +109,10 @@ The provided code implements a custom ROUGE-L metric tailored for SQL queries, c
 
 $$F_1 = \frac{2PR}{P + R}$$
 
+Where:
+- $P$ is the precision, defined as $\frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}$.
+- $R$ is the recall, defined as $\frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}$.
+
    - Penalizes extreme imbalances (e.g., high recall but low precision).
 
 
