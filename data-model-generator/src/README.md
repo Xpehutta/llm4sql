@@ -22,7 +22,7 @@
 ```sql
 SELECT customer_id, name
 FROM customers
-INNER JOIN orders ON customers.customer_id = orders.customer_id
+ JOIN orders ON customers.customer_id = orders.customer_id
 WHERE customers.name LIKE '%smith%' 
   AND orders.order_date BETWEEN '2021-03-15' AND '2023-08-22';
 ```
