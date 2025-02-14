@@ -1,29 +1,4 @@
 ---
-# Example: SQL Code Generation
----
-
-Below is an example of the model's ability to generate SQL code based on a partial input query. The model successfully completes the query by adding relevant joins and conditions.
-
-### **Input**
-```sql
-SELECT * FROM products JOIN 
-```
-
-### **Generated Completion**
-```sql
-suppliers ON products.supplier_id = suppliers.supplier_id 
-LEFT JOIN categories ON products.category_id = categories.category_id 
-WHERE products.product_id < 15 AND products.product_id < 24;
-```
-
-### **Explanation**
-- The model correctly identifies the relationship between the `products` and `suppliers` tables using the `supplier_id` column.
-- It extends the query by adding a `LEFT JOIN` with the `categories` table, linking it via the `category_id` column.
-- Finally, it appends a `WHERE` clause to filter the results based on the `product_id` column.
-
-
-
----
 # Training Results Summary
 ---
 
@@ -61,7 +36,28 @@ WHERE products.product_id < 15 AND products.product_id < 24;
 - The **ROUGE-L-SQL F1 Score** improved from `0.4067` in Epoch 1 to `0.4497` in Epoch 3, reflecting better performance on the validation set.
 - The total duration for all three epochs was approximately **86 minutes**.
 
+---
+# Example: SQL Code Generation
+---
 
+Below is an example of the model's ability to generate SQL code based on a partial input query. The model successfully completes the query by adding relevant joins and conditions.
+
+### **Input**
+```sql
+SELECT * FROM products JOIN 
+```
+
+### **Generated Completion**
+```sql
+suppliers ON products.supplier_id = suppliers.supplier_id 
+LEFT JOIN categories ON products.category_id = categories.category_id 
+WHERE products.product_id < 15 AND products.product_id < 24;
+```
+
+### **Explanation**
+- The model correctly identifies the relationship between the `products` and `suppliers` tables using the `supplier_id` column.
+- It extends the query by adding a `LEFT JOIN` with the `categories` table, linking it via the `category_id` column.
+- Finally, it appends a `WHERE` clause to filter the results based on the `product_id` column.
 
 ---
 # Technical Overview of Fine-tuning
