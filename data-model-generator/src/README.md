@@ -17,8 +17,23 @@
 - **Query Generation**: The `generate_synthetic_query` method constructs SQL queries based on the data model, including joins and conditions.
 - **Dataset Generation**: The `generate_dataset` method creates a dataset by splitting each query into input (initial part) and output (remaining part) to facilitate training models for query completion or generation tasks.
 
-This approach ensures that the data model and query generation are encapsulated within a reusable class, making it easy to generate synthetic datasets for various purposes.
 
 ---
-# SQLSimilarity
+# SQLRougeL
 ---
+
+### Approach
+1. **Class Definition**: Create a class `SQLRougeL` that will contain all the necessary methods.
+2. **Helper Methods**:
+   - **Tokenization**: Convert SQL queries into tokens using regular expressions to identify SQL keywords, identifiers, operators, and punctuation.
+   - **LCS Calculation**: Compute the length of the longest common subsequence between two token lists using dynamic programming.
+3. **Main Method**: Calculate the ROUGE-L-SQL score by utilizing the tokenizer and LCS functions to determine precision, recall, and F1 score between a generated SQL query and a reference query.
+
+
+### Explanation
+1. **Class Initialization**: The `SQLRougeL` class is defined without an initializer since no instance variables are needed.
+2. **Static Methods**:
+   - `_sql_tokenizer`: Converts an SQL query into a list of tokens by normalizing the query and using regular expressions to identify SQL components.
+   - `_lcs`: Uses dynamic programming to compute the length of the longest common subsequence between two lists of tokens.
+3. **Main Method**:
+   - `rouge_l_sql`: Takes two SQL queries (generated and reference), tokenizes them, computes the LCS length, and calculates precision, recall, and F1 score to return the ROUGE-L-SQL metrics.
