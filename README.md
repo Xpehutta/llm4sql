@@ -176,107 +176,93 @@ WHERE customers.name LIKE '%smith%'
 
 
 
-### 1. **Why BERT Works Well for Semantic Similarity**
 
-#### a. **Understanding BERT Embeddings**
-BERT (Bidirectional Encoder Representations from Transformers) is a deep learning model that generates contextualized embeddings for words or sentences. These embeddings capture semantic meaning by considering the context in which words appear.
+### **1. Normalization**  
+**Goal:** Standardize queries to ignore superficial differences (aliases, literals, formatting).  
+**How it works:**  
+- Uses `sqlglot` to parse the query into an Abstract Syntax Tree (AST).  
+- Applies `remove_aliases_and_literals` to:  
+  - Strip aliases (e.g., `customers AS c` → `customers`).  
+  - Replace literals (e.g., `'2023-01-01'` → `?`).  
+- Converts the AST back to standardized SQL (consistent formatting).  
 
-- **Contextualization**: Unlike traditional word embeddings like Word2Vec or GloVe, which assign a single vector to each word regardless of its context, BERT generates different vectors for the same word depending on its surrounding words.
-- **Deep Learning Architecture**: BERT uses a transformer-based architecture with multiple layers of self-attention mechanisms, enabling it to capture long-range dependencies and complex relationships between words.
+**Example:**  
+```sql
+-- Original Query
+SELECT c.name FROM customers AS c WHERE c.id = 123;
 
-For example:
-- The word "bank" in "river bank" vs. "bank account" will have different embeddings in BERT because the context determines its meaning.
-
-#### b. **Sentence Embeddings**
-When we use BERT for sentence-level tasks, the embeddings represent the entire sentence as a single vector. This vector encodes the semantic meaning of the sentence, including the relationships between words.
-
-- **Pooling Techniques**: Common methods to generate sentence embeddings from BERT include:
-  - **Mean Pooling**: Average the embeddings of all tokens in the sentence.
-  - **CLS Token**: Use the embedding of the special `[CLS]` token, which is often fine-tuned for specific tasks.
-  - **Max Pooling**: Take the maximum value across dimensions for all tokens.
-
-These embeddings are high-dimensional (typically 768 dimensions for BERT-base), capturing rich semantic information.
+-- Normalized Query
+SELECT name FROM customers WHERE id = ?;
+```
 
 ---
 
-### 2. **Why Cosine Similarity Works Great**
+### **2. AST Similarity**  
+**Goal:** Compare the structural similarity of queries using their ASTs.  
+**How it works:**  
+- Converts the AST into a string of node class names (e.g., `Select From Join Where`).  
+- Uses **Levenshtein distance** (edit distance) to compare these strings.  
+- Normalizes the distance by the maximum string length to get a score between 0 (dissimilar) and 1 (identical).  
 
-Cosine similarity measures the cosine of the angle between two vectors in a multi-dimensional space. It is widely used for comparing text embeddings because:
-
-#### a. **Definition of Cosine Similarity**
-Given two vectors $\mathbf{A}$ and $\mathbf{B}$ in $n$-dimensional space, cosine similarity is defined as:
-
-$\text{cosine\_similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}$
-
-Where:
-- $\mathbf{A} \cdot \mathbf{B}$: Dot product of $\mathbf{A}$ and $\mathbf{B}$.
-- $\|\mathbf{A}\|$: Magnitude (or norm) of $\mathbf{A}$, calculated as $\sqrt{\sum_{i=1}^n A_i^2}$.
-
-#### b. **Properties of Cosine Similarity**
-1. **Range**: Cosine similarity values range from -1 to 1:
-   - $1$: Vectors are identical (perfect alignment).
-   - $0$: Vectors are orthogonal (no similarity).
-   - $-1$: Vectors are diametrically opposite.
-2. **Invariance to Vector Length**: Cosine similarity is unaffected by the magnitude of the vectors, focusing only on their direction. This makes it ideal for comparing normalized embeddings like those produced by BERT.
-
-#### c. **Why Cosine Similarity Works Well with BERT Embeddings**
-1. **Semantic Alignment**: BERT embeddings encode semantic meaning, so semantically similar sentences tend to have vectors pointing in similar directions in the embedding space. Cosine similarity effectively captures this alignment.
-2. **Normalization**: BERT embeddings are typically L2-normalized, meaning their magnitudes are close to 1. This ensures that cosine similarity directly reflects the angular distance between vectors, without being influenced by differences in magnitude.
+**Why it works:**  
+- Ignores aliases/literals (due to normalization).  
+- Captures structural patterns (e.g., joins, filters, groupings).  
 
 ---
 
-### 3. **Mathematical Details of Why BERT + Cosine Similarity Works**
+### **3. Component Similarity**  
+**Goal:** Compare shared components (tables, columns, conditions) using **Jaccard similarity**.  
+**How it works:**  
+- Extracts components from the AST:  
+  - **Tables**: `customers`, `orders`  
+  - **Columns**: `name`, `total`  
+  - **Conditions**: `orders.date > ?`  
+- Computes Jaccard index for each component:  
+  ```
+  similarity = (intersection of components) / (union of components)
+  ```  
 
-#### a. **BERT Embeddings Capture Semantic Meaning**
-Let’s consider two sentences:
-- $S_1 = \text{"I love programming"}$
-- $S_2 = \text{"Programming is fun"}$
-
-BERT generates embeddings $\mathbf{E}_1$ and $\mathbf{E}_2$ for these sentences. If $S_1$ and $S_2$ are semantically similar, their embeddings will point in similar directions in the embedding space.
-
-#### b. **Cosine Similarity Measures Angular Distance**
-The cosine similarity between $\mathbf{E}_1$ and $\mathbf{E}_2$ is:
-
-$\text{cosine\_similarity}(\mathbf{E}_1, \mathbf{E}_2) = \frac{\mathbf{E}_1 \cdot \mathbf{E}_2}{\|\mathbf{E}_1\| \|\mathbf{E}_2\|}$
-
-If $\mathbf{E}_1$ and $\mathbf{E}_2$ are close in direction (small angle between them), the dot product $\mathbf{E}_1 \cdot \mathbf{E}_2$ will be large, resulting in a high cosine similarity value.
-
-#### c. **Example Calculation*
-Assume $\mathbf{E}_1 = [0.5, 0.8, 0.2]$ and $\mathbf{E}_2 = [0.4, 0.9, 0.1]$:
-
-1. **Dot Product**:
-
-   $\mathbf{E}_1 \cdot \mathbf{E}_2 = (0.5 \times 0.4) + (0.8 \times 0.9) + (0.2 \times 0.1) = 0.2 + 0.72 + 0.02 = 0.94$
-
-3. **Magnitudes**:
-
-   $\|\mathbf{E}_1\| = \sqrt{0.5^2 + 0.8^2 + 0.2^2} = \sqrt{0.25 + 0.64 + 0.04} = \sqrt{0.93} \approx 0.964$
-
-   $\|\mathbf{E}_2\| = \sqrt{0.4^2 + 0.9^2 + 0.1^2} = \sqrt{0.16 + 0.81 + 0.01} = \sqrt{0.98} \approx 0.990$
-
-4. **Cosine Similarity**:
-   
-   $\text{cosine\_similarity}(\mathbf{E}_1, \mathbf{E}_2) = \frac{0.94}{0.964 \times 0.990} \approx \frac{0.94}{0.954} \approx 0.985$
-
-This high value indicates strong similarity between $S_1$ and $S_2$.
+**Why it works:**  
+- Identifies overlaps in critical elements (e.g., shared tables/columns).  
+- Useful for detecting partial similarities (e.g., same tables but different filters).  
 
 ---
 
-### 4. **Comparison with Other Methods**
+### **4. Combined Score**  
+A weighted average of:  
+- `AST similarity (40%)`  
+- `Table similarity (30%)`  
+- `Column similarity (20%)`  
+- `Condition similarity (10%)`  
 
-#### a. **TF-IDF vs. BERT**
-- **TF-IDF**: Captures term frequency and inverse document frequency but lacks semantic understanding. For example, "car" and "vehicle" would not be considered similar under TF-IDF.
-- **BERT**: Encodes semantic meaning, so "car" and "vehicle" would have similar embeddings.
-
-#### b. **Euclidean Distance vs. Cosine Similarity**
-- **Euclidean Distance**: Measures absolute distance between vectors. However, it can be sensitive to vector magnitude, making it less suitable for normalized embeddings.
-- **Cosine Similarity**: Focuses on direction rather than magnitude, making it more robust for comparing semantic embeddings.
+This allows customizable prioritization of structural vs. component similarities.
 
 ---
 
-### 5. **Conclusion**
+### **Key Insights**  
+1. **Robust to Formatting:** Normalization removes formatting noise (aliases, spacing, capitalization).  
+2. **Semantic Understanding:** AST comparisons capture logical structure, not just text.  
+3. **Flexibility:** Component weights can be adjusted based on use case (e.g., prioritize tables over conditions).  
+4. **Tradeoffs:**  
+   - **AST similarity** is strict but may miss semantic equivalences (e.g., `WHERE a = b` vs `WHERE b = a`).  
+   - **Component similarity** is lenient but may over-simplify complex logic.  
 
-Using **Sentence Embeddings (BERT)** and **Cosine Similarity** works great:
-1. **BERT Embeddings** capture rich semantic meaning by leveraging contextualized representations.
-2. **Cosine Similarity** effectively measures the alignment of these embeddings, focusing on direction rather than magnitude.
+---
+
+### **Example Output**  
+For the provided `query1` and `query2`:  
+- **Normalized Queries** become structurally identical (aliases removed, literals replaced).  
+- **AST Similarity**: High (~1.0).  
+- **Component Similarities**:  
+  - Tables: 1.0 (both use `customers`, `orders`).  
+  - Columns: 1.0 (`name`, `total`).  
+  - Conditions: Lower due to different dates (`?` vs `?` after normalization).  
+
+---
+
+### **Use Cases**  
+- Plagiarism detection in SQL queries.  
+- Identifying redundant queries in a codebase.  
+- Detecting similar queries for performance optimization.  
+
 
