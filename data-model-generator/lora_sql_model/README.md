@@ -4,7 +4,7 @@ library_name: peft
 ---
 
 
-```markdown
+
 ### Download Progress Summary
 
 - **tokenizer_config.json**:  
@@ -29,7 +29,6 @@ library_name: peft
 - **Trainable Parameters**: 786,432  
 - **Total Parameters**: 1,347,258,368  
 - **Percentage of Trainable Parameters**: 0.0584%
-```
 
 This format makes the information more readable and structured in a markdown format.
 
