@@ -105,7 +105,7 @@ The provided code implements a custom ROUGE-L metric tailored for SQL queries, c
    - Time Complexity: $\(O(mn)\)$, where $\(m\)$ and $\(n\)$ are token counts of the two queries.
 
 2. **F1 Score Calculation**:
-   - Harmonic mean of precision $\P$ and recall $(\(R\))$:
+   - Harmonic mean of precision $(\(R))$ and recall $(\(R\))$:
 ![F1 Score Formula](https://latex.codecogs.com/png.latex?F_1%20%3D%20\frac%7B2PR%7D%7BP%20+%20R%7D)
 
    - Penalizes extreme imbalances (e.g., high recall but low precision).
