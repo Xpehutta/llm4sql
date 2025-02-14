@@ -68,3 +68,90 @@ WHERE customers.name LIKE '%smith%'
    - `_lcs`: Uses dynamic programming to compute the length of the longest common subsequence between two lists of tokens.
 3. **Main Method**:
    - `rouge_l_sql`: Takes two SQL queries (generated and reference), tokenizes them, computes the LCS length, and calculates precision, recall, and F1 score to return the ROUGE-L-SQL metrics.
+
+
+---
+## SQLSimilarity Class
+---
+
+### **1. Normalization**  
+**Goal:** Standardize queries to ignore superficial differences (aliases, literals, formatting).  
+**How it works:**  
+- Uses `sqlglot` to parse the query into an Abstract Syntax Tree (AST).  
+- Applies `remove_aliases_and_literals` to:  
+  - Strip aliases (e.g., `customers AS c` → `customers`).  
+  - Replace literals (e.g., `'2023-01-01'` → `?`).  
+- Converts the AST back to standardized SQL (consistent formatting).  
+
+**Example:**  
+```sql
+-- Original Query
+SELECT c.name FROM customers AS c WHERE c.id = 123;
+
+-- Normalized Query
+SELECT name FROM customers WHERE id = ?;
+```
+
+
+### **2. AST Similarity**  
+**Goal:** Compare the structural similarity of queries using their ASTs.  
+**How it works:**  
+- Converts the AST into a string of node class names (e.g., `Select From Join Where`).  
+- Uses **Levenshtein distance** (edit distance) to compare these strings.  
+- Normalizes the distance by the maximum string length to get a score between 0 (dissimilar) and 1 (identical).  
+
+**Why it works:**  
+- Ignores aliases/literals (due to normalization).  
+- Captures structural patterns (e.g., joins, filters, groupings).  
+
+
+### **3. Component Similarity**  
+**Goal:** Compare shared components (tables, columns, conditions) using **Jaccard similarity**.  
+**How it works:**  
+- Extracts components from the AST:  
+  - **Tables**: `customers`, `orders`  
+  - **Columns**: `name`, `total`  
+  - **Conditions**: `orders.date > ?`  
+- Computes Jaccard index for each component:  
+  ```
+  similarity = (intersection of components) / (union of components)
+  ```  
+
+**Why it works:**  
+- Identifies overlaps in critical elements (e.g., shared tables/columns).  
+- Useful for detecting partial similarities (e.g., same tables but different filters).  
+
+
+### **4. Combined Score**  
+A weighted average of:  
+- `AST similarity (40%)`  
+- `Table similarity (30%)`  
+- `Column similarity (20%)`  
+- `Condition similarity (10%)`  
+
+This allows customizable prioritization of structural vs. component similarities.
+
+
+### **Key Insights**  
+1. **Robust to Formatting:** Normalization removes formatting noise (aliases, spacing, capitalization).  
+2. **Semantic Understanding:** AST comparisons capture logical structure, not just text.  
+3. **Flexibility:** Component weights can be adjusted based on use case (e.g., prioritize tables over conditions).  
+4. **Tradeoffs:**  
+   - **AST similarity** is strict but may miss semantic equivalences (e.g., `WHERE a = b` vs `WHERE b = a`).  
+   - **Component similarity** is lenient but may over-simplify complex logic.  
+
+
+### **Example Output**  
+For the provided `query1` and `query2`:  
+- **Normalized Queries** become structurally identical (aliases removed, literals replaced).  
+- **AST Similarity**: High (~1.0).  
+- **Component Similarities**:  
+  - Tables: 1.0 (both use `customers`, `orders`).  
+  - Columns: 1.0 (`name`, `total`).  
+  - Conditions: Lower due to different dates (`?` vs `?` after normalization).  
+
+
+### **Use Cases**  
+- Plagiarism detection in SQL queries.  
+- Identifying redundant queries in a codebase.  
+- Detecting similar queries for performance optimization.  
