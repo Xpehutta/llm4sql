@@ -1,22 +1,29 @@
----
-# Accelerators (x2)
+# GPU Information
+
+Below is a summary of the GPU configuration and status as reported by `nvidia-smi`.
+
 ---
 
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 560.35.03              Driver Version: 560.35.03      CUDA Version: 12.6     |
-|-----------------------------------------+------------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
-|                                         |                        |               MIG M. |
-|=========================================+========================+======================|
-|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
-| N/A   47C    P8             11W /   70W |       1MiB /  15360MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------+------------------------+----------------------+
-|   1  Tesla T4                       Off |   00000000:00:05.0 Off |                    0 |
-| N/A   46C    P8             12W /   70W |       1MiB /  15360MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------+------------------------+----------------------+
+### **Driver and CUDA Version**
+| **Component**       | **Version**          |
+|----------------------|----------------------|
+| NVIDIA-SMI           | 560.35.03           |
+| Driver Version       | 560.35.03           |
+| CUDA Version         | 12.6                |
+
+---
+
+### **GPU Details**
+
+| **GPU ID** | **Name**       | **Persistence Mode** | **Bus-ID**      | **Display Active** | **Volatile Uncorr. ECC** | **Fan** | **Temp** | **Performance** | **Power (Usage/Cap)** | **Memory Usage** | **GPU Utilization** | **Compute Mode** | **MIG Mode** |
+|------------|----------------|----------------------|-----------------|--------------------|--------------------------|---------|----------|-----------------|-----------------------|------------------|---------------------|------------------|--------------|
+| 0          | Tesla T4       | Off                  | 00000000:00:04.0| Off                | 0                        | N/A     | 47°C      | P8              | 11W / 70W             | 1MiB / 15360MiB  | 0%                  | Default          | N/A          |
+| 1          | Tesla T4       | Off                  | 00000000:00:05.0| Off                | 0                        | N/A     | 46°C      | P8              | 12W / 70W             | 1MiB / 15360MiB  | 0%                  | Default          | N/A          |
+
+---
+
+### **Key Observations**
+- Both GPUs are **Tesla T4** models with **15GB of memory** each.
 
 
 ---
