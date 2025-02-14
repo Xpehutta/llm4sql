@@ -106,8 +106,6 @@ The provided code implements a custom ROUGE-L metric tailored for SQL queries, c
 
 2. **F1 Score Calculation**:
    - Harmonic mean of precision $\(P\)$ and recall $\(R\)$:
-  
-![F1 Score Formula](https://latex.codecogs.com/png.latex?F_1%20%3D%20\frac%7B2PR%7D%7BP%20+%20R%7D)
 
 $$F_1 = \frac{2PR}{P + R}$$
 
