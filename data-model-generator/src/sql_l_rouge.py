@@ -58,3 +58,10 @@ class SQLRougeL:
             "recall": recall,
             "f1_score": f1_score
         }
+        
+# Example usage:
+# sql_rouge = SQLRougeL()
+# generated_query = "SELECT customer_id, name FROM customers WHERE email = 'example@example.com'"
+# reference_query = "select customer_id , name from customers where email = 'example@example.com'"
+# result = sql_rouge.rouge_l_sql(generated_query, reference_query)
+# print(result)
