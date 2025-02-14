@@ -1,4 +1,6 @@
-### Data Model:
+---
+# Data Model:
+---
 
 1. **Tables**:
    - Added a variety of new tables such as `employees`, `departments`, `locations`, `payments`, `invoices`, `shipping_details`, `discounts`, `promotions`, `reviews`, `feedbacks`, `wishlists`, `shopping_carts`, `cart_items`, `inventory`, `sales`, `returns`, `refunds`, `taxes`, `coupons`, `subscriptions`, `notifications`, `user_roles`, `permissions`, `audit_logs`, `contacts`, `messages`, `chat_sessions`, `tickets`, `ticket_comments`, `knowledge_base`, `faq`, `blog_posts`, `comments`, `likes`, `followers`, `activity_logs`, `settings`, `configurations`, `reports`, `dashboards`, `widgets`, and `integrations`.
@@ -72,8 +74,9 @@ WHERE customers.name LIKE '%smith%'
   
 
 
-
-# Technical Overview
+---
+# Technical Overview of Fine-tuning
+---
 
 ## 1. **LoRA (Low-Rank Adaptation)**
 ### Mathematical Description
@@ -94,7 +97,6 @@ WHERE customers.name LIKE '%smith%'
   
   This balances task-specific adaptation and stability.
 
----
 
 ## 2. **Dataset and Tokenization**
 ### Mathematical Description
@@ -108,7 +110,6 @@ WHERE customers.name LIKE '%smith%'
 - Fixed sequence length $L$ simplifies batch processing.
 - The separator token clarifies input-output boundaries for the model.
 
----
 
 ## 3. **Training Loop**
 #### Mathematical Description:
@@ -132,7 +133,6 @@ WHERE customers.name LIKE '%smith%'
 - AdamW combines adaptive learning rates and weight decay.
 - Fine-tuning only LoRA parameters reduces memory and speeds training.
 
----
 
 ## 4. **Batch Processing**
 ### Mathematical Description
@@ -146,7 +146,6 @@ WHERE customers.name LIKE '%smith%'
 - GPU parallelism accelerates batch computations.
 - Larger batches stabilize gradient estimates.
 
----
 
 ## 5. **Loss Function**
 ### Mathematical Description
@@ -162,7 +161,6 @@ WHERE customers.name LIKE '%smith%'
 - Directly optimizes token prediction accuracy.
 - Suitable for autoregressive language modeling.
 
----
 
 ## 6. **Device Management**
 ### Mathematical Description
@@ -175,7 +173,9 @@ WHERE customers.name LIKE '%smith%'
 - Efficient hardware utilization speeds up training.
 
 
-
+---
+# Metrics of SQL similarity
+---
 
 ### **1. Normalization**  
 **Goal:** Standardize queries to ignore superficial differences (aliases, literals, formatting).  
