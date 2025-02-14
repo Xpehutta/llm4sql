@@ -43,7 +43,7 @@ WHERE customers.name LIKE '%smith%'
    - Maintains referential integrity
 
 4. **Variety Generation**:
-   - Multiple JOIN types (INNER, LEFT, RIGHT)
+   - Multiple JOIN types ('', LEFT)
    - Different comparison operators
    - Various condition patterns (LIKE, IN, BETWEEN)
 
