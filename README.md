@@ -1,8 +1,8 @@
+---
 # GPU Information
+---
 
 Below is a summary of the GPU configuration and status as reported by `nvidia-smi`.
-
----
 
 ### **Driver and CUDA Version**
 | **Component**       | **Version**          |
@@ -11,7 +11,6 @@ Below is a summary of the GPU configuration and status as reported by `nvidia-sm
 | Driver Version       | 560.35.03           |
 | CUDA Version         | 12.6                |
 
----
 
 ### **GPU Details**
 
@@ -20,9 +19,7 @@ Below is a summary of the GPU configuration and status as reported by `nvidia-sm
 | 0          | Tesla T4       | Off                  | 00000000:00:04.0| Off                | 0                        | N/A     | 47°C      | P8              | 11W / 70W             | 1MiB / 15360MiB  | 0%                  | Default          | N/A          |
 | 1          | Tesla T4       | Off                  | 00000000:00:05.0| Off                | 0                        | N/A     | 46°C      | P8              | 12W / 70W             | 1MiB / 15360MiB  | 0%                  | Default          | N/A          |
 
----
 
-### **Key Observations**
 - Both GPUs are **Tesla T4** models with **15GB of memory** each.
 
 
