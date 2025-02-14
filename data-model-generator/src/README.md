@@ -102,7 +102,7 @@ The provided code implements a custom ROUGE-L metric tailored for SQL queries, c
      dp[i][j] = dp[i-1][j-1] + 1              if tokens match
                 max(dp[i-1][j], dp[i][j-1])   otherwise
      ```
-   - Time Complexity: $\O(mn)$, where $\(m\)$ and $\(n\)$ are token counts of the two queries.
+   - Time Complexity: $O(mn)$, where $\(m\)$ and $\(n\)$ are token counts of the two queries.
 
 2. **F1 Score Calculation**:
    - Harmonic mean of precision $\(P\)$ and recall $\(R\)$:
