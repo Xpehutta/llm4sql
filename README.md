@@ -1,4 +1,44 @@
 ---
+# Training Results Summary
+---
+
+
+### **Epoch 1**
+- **Training Loss**: `0.1687`
+- **Training Duration**: `954.77 seconds`
+- **Validation Loss**: `0.1677`
+- **ROUGE-L-SQL F1 Score**: `0.4067`
+- **Total Epoch Duration**: `1723.02 seconds`
+
+
+### **Epoch 2**
+- **Training Loss**: `0.1655`
+- **Training Duration**: `953.36 seconds`
+- **Validation Loss**: `0.1664`
+- **ROUGE-L-SQL F1 Score**: `0.4392`
+- **Total Epoch Duration**: `1721.41 seconds`
+
+
+### **Epoch 3**
+- **Training Loss**: `0.1640`
+- **Training Duration**: `952.15 seconds`
+- **Validation Loss**: `0.1664`
+- **ROUGE-L-SQL F1 Score**: `0.4497`
+- **Total Epoch Duration**: `1720.05 seconds`
+
+
+### **Overall Training Duration**
+- **Total Time**: `5164.47 seconds` (~86 minutes)
+
+
+### Key Observations:
+- The **training loss** decreased consistently across epochs, indicating model improvement.
+- The **ROUGE-L-SQL F1 Score** improved from `0.4067` in Epoch 1 to `0.4497` in Epoch 3, reflecting better performance on the validation set.
+- The total duration for all three epochs was approximately **86 minutes**.
+
+
+
+---
 # Data Modeling
 ---
 
